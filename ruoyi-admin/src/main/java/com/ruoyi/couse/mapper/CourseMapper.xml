@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.couse.mapper.CourseMapper" >
+  <resultMap id="BaseResultMap" type="com.ruoyi.couse.pojo.Course" >
+    <id column="course_id" property="courseId" jdbcType="INTEGER" />
+    <result column="course_name" property="courseName" jdbcType="VARCHAR" />
+    <result column="course_desc" property="courseDesc" jdbcType="VARCHAR" />
+    <result column="teacher_id" property="teacherId" jdbcType="INTEGER" />
+    <result column="course_status" property="courseStatus" jdbcType="INTEGER" />
+    <result column="course_editTime" property="courseEdittime" jdbcType="TIMESTAMP" />
+    <association property="courseGrade" javaType="com.ruoyi.couse.pojo.CourseGrade">
+		<id column="courseGrade_id" property="coursegradeId" jdbcType="INTEGER" />
+		<result column="courseGrade_name" property="coursegradeName" jdbcType="VARCHAR" />
+	</association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    course_id, course_name, course_desc, courseGrade_id, course_status, teacher_id, course_editTime
+  </sql>
+  <select id="queryCourseById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  	select 
+  	<include refid="Base_Column_List" />
+  	from course where course_id = #{courseId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select c.course_id, c.course_name, c.course_desc, c.course_status, c.courseGrade_id, c.teacher_id, c.course_editTime, cg.courseGrade_name
+    from course c join coursegrade cg on c.courseGrade_id=cg.courseGrade_id
+    where c.course_id = #{courseId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="listAllCourse" resultMap="BaseResultMap">
+    select c.course_id, c.course_name, c.course_desc, c.course_status, c.courseGrade_id, c.teacher_id, c.course_editTime, cg.courseGrade_name
+    from course c join coursegrade cg on c.courseGrade_id=cg.courseGrade_id order by c.course_id desc
+  </select>
+
+  <select id="listAllCourseByStu" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select c.course_id, c.course_name, c.course_desc, c.course_status, c.courseGrade_id, c.teacher_id, c.course_editTime, cg.courseGrade_name
+    from course c join coursegrade cg on c.courseGrade_id=cg.courseGrade_id
+    where c.course_id in (select course_id from stucourse where user_id=#{userId})
+    order by c.course_id desc
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from course
+    where course_id = #{courseId,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insertClone" parameterType="com.ruoyi.repository.pojo.RepCourse" useGeneratedKeys="true" keyProperty="courseId">
+    insert into course (course_name, course_desc,
+                        courseGrade_id, course_status, teacher_id,
+                        course_editTime)
+    values (#{courseName,jdbcType=VARCHAR}, #{courseDesc,jdbcType=VARCHAR},
+            #{courseGrade.coursegradeId,jdbcType=INTEGER}, #{courseStatus,jdbcType=INTEGER}, #{teacherId,jdbcType=INTEGER},
+            #{courseEdittime,jdbcType=TIMESTAMP})
+  </insert>
+  
+  <insert id="insert" parameterType="com.ruoyi.couse.pojo.Course" >
+    insert into course (course_id, course_name, course_desc, 
+      courseGrade_id, course_status, teacher_id, 
+      course_editTime)
+    values (#{courseId,jdbcType=INTEGER}, #{courseName,jdbcType=VARCHAR}, #{courseDesc,jdbcType=VARCHAR}, 
+      #{courseGrade.coursegradeId,jdbcType=INTEGER}, #{courseStatus,jdbcType=INTEGER}, #{teacherId,jdbcType=INTEGER}, 
+      #{courseEdittime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ruoyi.couse.pojo.Course" useGeneratedKeys="true" keyProperty="courseId">
+    insert into course
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="courseId != null" >
+        course_id,
+      </if>
+      <if test="courseName != null" >
+        course_name,
+      </if>
+      <if test="courseDesc != null" >
+        course_desc,
+      </if>
+      <if test="courseGrade.coursegradeId != null" >
+        courseGrade_id,
+      </if>
+      <if test="courseStatus != null" >
+        course_status,
+      </if>
+      <if test="teacherId != null" >
+        teacher_id,
+      </if>
+      <if test="courseEdittime != null" >
+        course_editTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="courseId != null" >
+        #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="courseName != null" >
+        #{courseName,jdbcType=VARCHAR},
+      </if>
+      <if test="courseDesc != null" >
+        #{courseDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="courseGrade.coursegradeId != null" >
+        #{courseGrade.coursegradeId,jdbcType=INTEGER},
+      </if>
+      <if test="courseStatus != null" >
+        #{courseStatus,jdbcType=INTEGER},
+      </if>
+      <if test="teacherId != null" >
+        #{teacherId,jdbcType=INTEGER},
+      </if>
+      <if test="courseEdittime != null" >
+        #{courseEdittime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.couse.pojo.Course" >
+    update course
+    <set >
+      <if test="courseName != null" >
+        course_name = #{courseName,jdbcType=VARCHAR},
+      </if>
+      <if test="courseDesc != null" >
+        course_desc = #{courseDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="courseGrade !=null and courseGrade.coursegradeId != null" >
+        courseGrade_id=#{courseGrade.coursegradeId,jdbcType=INTEGER},
+      </if>
+      <if test="courseStatus != null" >
+        course_status = #{courseStatus,jdbcType=INTEGER},
+      </if>
+      <if test="teacherId != null" >
+        teacher_id = #{teacherId,jdbcType=INTEGER},
+      </if>
+      <if test="courseEdittime != null" >
+        course_editTime = #{courseEdittime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where course_id = #{courseId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.couse.pojo.Course" >
+    update course
+    set course_name = #{courseName,jdbcType=VARCHAR},
+    course_desc = #{courseDesc,jdbcType=VARCHAR},
+    courseGrade_id=#{courseGrade.coursegradeId,jdbcType=INTEGER}
+    where course_id = #{courseId,jdbcType=INTEGER} and 
+    course_editTime = #{courseEdittime,jdbcType=TIMESTAMP}
+  </update>
+</mapper>
+  

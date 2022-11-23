@@ -66,7 +66,7 @@ spring:
     # 端口，默认为6379
     port: 6379
     # 数据库索引
-    database: 0
+    database: 15
     # 密码
     password: 20020220jjq
     # 连接超时时间
@@ -121,3 +121,9 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+minio:
+  endpoint: http://localhost:9000 #Minio服务所在地址
+  bucketName: resource #存储桶名称
+  accessKey: minioadmin #访问的key
+  secretKey: minioadmin #访问的秘钥

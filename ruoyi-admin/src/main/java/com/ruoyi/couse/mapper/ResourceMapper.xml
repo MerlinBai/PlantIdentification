@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.couse.mapper.ResourceMapper" >
+  <resultMap id="BaseResultMap" type="com.ruoyi.couse.pojo.Resource" >
+    <id column="resource_id" property="resourceId" jdbcType="INTEGER" />
+    <result column="resource_name" property="resourceName" jdbcType="VARCHAR" />
+    <result column="resource_endpoint" property="resourceEndpoint" jdbcType="VARCHAR" />
+    <result column="resource_bucketName" property="resourceBucketname" jdbcType="VARCHAR" />
+    <result column="resource_url" property="resourceUrl" jdbcType="VARCHAR" />
+    <result column="resource_type" property="resourceType" jdbcType="INTEGER" />
+    <result column="section_id" property="sectionId" jdbcType="INTEGER" />
+    <result column="resource_editTime" property="resourceEdittime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    resource_id, resource_name, resource_endpoint, resource_bucketName, resource_url, 
+    resource_type, section_id, resource_editTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from resource
+    where resource_id = #{resourceId,jdbcType=INTEGER}
+  </select>
+  <select id="selectBySection" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from resource
+    where section_id = #{section_id,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteBySection" parameterType="java.lang.Integer" >
+    delete from resource
+    where section_id = #{sectionId,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from resource
+    where resource_id = #{resourceId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ruoyi.couse.pojo.Resource" >
+    insert into resource (resource_id, resource_name, resource_endpoint, 
+      resource_bucketName, resource_url, resource_type, 
+      section_id, resource_editTime)
+    values (#{resourceId,jdbcType=INTEGER}, #{resourceName,jdbcType=VARCHAR}, #{resourceEndpoint,jdbcType=VARCHAR}, 
+      #{resourceBucketname,jdbcType=VARCHAR}, #{resourceUrl,jdbcType=VARCHAR}, #{resourceType,jdbcType=INTEGER}, 
+      #{sectionId,jdbcType=INTEGER}, #{resourceEdittime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <insert id="insertClone" parameterType="com.ruoyi.repository.pojo.RepResource" >
+    insert into resource (resource_name, resource_endpoint,
+                          resource_bucketName, resource_url, resource_type,
+                          section_id, resource_editTime)
+    values (#{resourceName,jdbcType=VARCHAR}, #{resourceEndpoint,jdbcType=VARCHAR},
+            #{resourceBucketname,jdbcType=VARCHAR}, #{resourceUrl,jdbcType=VARCHAR}, #{resourceType,jdbcType=INTEGER},
+            #{sectionId,jdbcType=INTEGER}, #{resourceEdittime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.ruoyi.couse.pojo.Resource" useGeneratedKeys="true" keyProperty="resourceId">
+    insert into resource
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="resourceId != null" >
+        resource_id,
+      </if>
+      <if test="resourceName != null" >
+        resource_name,
+      </if>
+      <if test="resourceEndpoint != null" >
+        resource_endpoint,
+      </if>
+      <if test="resourceBucketname != null" >
+        resource_bucketName,
+      </if>
+      <if test="resourceUrl != null" >
+        resource_url,
+      </if>
+      <if test="resourceType != null" >
+        resource_type,
+      </if>
+      <if test="sectionId != null" >
+        section_id,
+      </if>
+      <if test="resourceEdittime != null" >
+        resource_editTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="resourceId != null" >
+        #{resourceId,jdbcType=INTEGER},
+      </if>
+      <if test="resourceName != null" >
+        #{resourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceEndpoint != null" >
+        #{resourceEndpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceBucketname != null" >
+        #{resourceBucketname,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceUrl != null" >
+        #{resourceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceType != null" >
+        #{resourceType,jdbcType=INTEGER},
+      </if>
+      <if test="sectionId != null" >
+        #{sectionId,jdbcType=INTEGER},
+      </if>
+      <if test="resourceEdittime != null" >
+        #{resourceEdittime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.couse.pojo.Resource" >
+    update resource
+    <set >
+      <if test="resourceName != null" >
+        resource_name = #{resourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceEndpoint != null" >
+        resource_endpoint = #{resourceEndpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceBucketname != null" >
+        resource_bucketName = #{resourceBucketname,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceUrl != null" >
+        resource_url = #{resourceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceType != null" >
+        resource_type = #{resourceType,jdbcType=INTEGER},
+      </if>
+      <if test="sectionId != null" >
+        section_id = #{sectionId,jdbcType=INTEGER},
+      </if>
+      <if test="resourceEdittime != null" >
+        resource_editTime = #{resourceEdittime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where resource_id = #{resourceId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.couse.pojo.Resource" >
+    update resource
+    set resource_name = #{resourceName,jdbcType=VARCHAR}
+    where resource_id = #{resourceId,jdbcType=INTEGER} and resource_editTime = #{resourceEdittime,jdbcType=TIMESTAMP}
+  </update>
+</mapper>

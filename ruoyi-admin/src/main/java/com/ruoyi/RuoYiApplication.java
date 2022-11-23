@@ -1,5 +1,6 @@
 package com.ruoyi;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -10,6 +11,8 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
  * @author ruoyi
  */
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
+@MapperScan(basePackages = {"com.ruoyi.couse.mapper","com.ruoyi.repository.dao",
+        "com.ruoyi.user.dao","com.ruoyi.study.mapper"})
 public class RuoYiApplication
 {
     public static void main(String[] args)
