@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.study.mapper.InstitutionMapper">
+    
+    <resultMap type="Institution" id="InstitutionResult">
+        <result property="id"    column="id"    />
+        <result property="nameed"    column="nameed"    />
+        <result property="charge"    column="charge"    />
+        <result property="phone"    column="phone"    />
+        <result property="address"    column="address"    />
+        <result property="coded"    column="coded"    />
+        <result property="institutionstatus"    column="institutionstatus"    />
+        <result property="isdeleted"    column="isdeleted"    />
+        <result property="institutioncreate"    column="institutioncreate"    />
+        <result property="institutionmodified"    column="institutionmodified"    />
+        <result property="field1"    column="field1"    />
+        <result property="field2"    column="field2"    />
+        <result property="field3"    column="field3"    />
+    </resultMap>
+
+    <sql id="selectInstitutionVo">
+        select id, nameed, charge, phone, address, coded, institutionstatus, isdeleted, institutioncreate, institutionmodified, field1, field2, field3 from institution
+    </sql>
+
+    <select id="selectInstitutionList" parameterType="Institution" resultMap="InstitutionResult">
+        <include refid="selectInstitutionVo"/>
+        <where>  
+            <if test="nameed != null  and nameed != ''"> and nameed = #{nameed}</if>
+            <if test="charge != null  and charge != ''"> and charge = #{charge}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="coded != null  and coded != ''"> and coded = #{coded}</if>
+            <if test="institutioncreate != null "> and institutioncreate = #{institutioncreate}</if>
+        </where>
+    </select>
+    
+    <select id="selectInstitutionById" parameterType="Long" resultMap="InstitutionResult">
+        <include refid="selectInstitutionVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertInstitution" parameterType="Institution">
+        insert into institution
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="nameed != null">nameed,</if>
+            <if test="charge != null">charge,</if>
+            <if test="phone != null">phone,</if>
+            <if test="address != null">address,</if>
+            <if test="coded != null">coded,</if>
+            <if test="institutionstatus != null">institutionstatus,</if>
+            <if test="isdeleted != null">isdeleted,</if>
+            <if test="institutioncreate != null">institutioncreate,</if>
+            <if test="institutionmodified != null">institutionmodified,</if>
+            <if test="field1 != null">field1,</if>
+            <if test="field2 != null">field2,</if>
+            <if test="field3 != null">field3,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="nameed != null">#{nameed},</if>
+            <if test="charge != null">#{charge},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="address != null">#{address},</if>
+            <if test="coded != null">#{coded},</if>
+            <if test="institutionstatus != null">#{institutionstatus},</if>
+            <if test="isdeleted != null">#{isdeleted},</if>
+            <if test="institutioncreate != null">#{institutioncreate},</if>
+            <if test="institutionmodified != null">#{institutionmodified},</if>
+            <if test="field1 != null">#{field1},</if>
+            <if test="field2 != null">#{field2},</if>
+            <if test="field3 != null">#{field3},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInstitution" parameterType="Institution">
+        update institution
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nameed != null">nameed = #{nameed},</if>
+            <if test="charge != null">charge = #{charge},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="coded != null">coded = #{coded},</if>
+            <if test="institutionstatus != null">institutionstatus = #{institutionstatus},</if>
+            <if test="isdeleted != null">isdeleted = #{isdeleted},</if>
+            <if test="institutioncreate != null">institutioncreate = #{institutioncreate},</if>
+            <if test="institutionmodified != null">institutionmodified = #{institutionmodified},</if>
+            <if test="field1 != null">field1 = #{field1},</if>
+            <if test="field2 != null">field2 = #{field2},</if>
+            <if test="field3 != null">field3 = #{field3},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteInstitutionById" parameterType="Long">
+        delete from institution where id = #{id}
+    </delete>
+
+    <delete id="deleteInstitutionByIds" parameterType="String">
+        delete from institution where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.couse.mapper.SectionMapper" >
+  <resultMap id="BaseResultMap" type="com.ruoyi.couse.pojo.Section" >
+    <id column="section_id" property="sectionId" jdbcType="INTEGER" />
+    <result column="section_name" property="sectionName" jdbcType="VARCHAR" />
+    <result column="chapter_id" property="chapterId" jdbcType="INTEGER" />
+    <result column="section_editTime" property="sectionEdittime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <resultMap id="SectionAndResource" type="com.ruoyi.couse.pojo.Section" >
+    <id column="section_id" property="sectionId" jdbcType="INTEGER" />
+    <result column="section_name" property="sectionName" jdbcType="VARCHAR" />
+    <result column="chapter_id" property="chapterId" jdbcType="INTEGER" />
+    <result column="section_editTime" property="sectionEdittime" jdbcType="TIMESTAMP" />
+    <collection property="resourceList" ofType="com.ruoyi.couse.pojo.Resource"
+    	select="com.tf.uplusstudy.course.dao.ResourceMapper.selectBySection" column="section_id"></collection>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    section_id, section_name, chapter_id, section_editTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from section
+    where section_id = #{sectionId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectSectionAndResource" resultMap="SectionAndResource" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from section
+    where section_id = #{sectionId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="listSectionByChapter" resultMap="SectionAndResource" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from section
+    where chapter_id = #{chapterId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="querySectionCount" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+    select count(section_id)
+    from section
+    where chapter_id = #{chapterId,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from section
+    where section_id = #{sectionId,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insertClone" parameterType="com.ruoyi.repository.pojo.RepSection" useGeneratedKeys="true" keyProperty="sectionId">
+    insert into section (section_name, chapter_id,
+                         section_editTime)
+    values (#{sectionName,jdbcType=VARCHAR}, #{chapterId,jdbcType=INTEGER},
+            #{sectionEdittime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <insert id="insert" parameterType="com.ruoyi.couse.pojo.Section" >
+    insert into section (section_id, section_name, chapter_id, 
+      section_editTime)
+    values (#{sectionId,jdbcType=INTEGER}, #{sectionName,jdbcType=VARCHAR}, #{chapterId,jdbcType=INTEGER}, 
+      #{sectionEdittime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ruoyi.couse.pojo.Section" useGeneratedKeys="true" keyProperty="sectionId">
+    insert into section
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sectionId != null" >
+        section_id,
+      </if>
+      <if test="sectionName != null" >
+        section_name,
+      </if>
+      <if test="chapterId != null" >
+        chapter_id,
+      </if>
+      <if test="sectionEdittime != null" >
+        section_editTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sectionId != null" >
+        #{sectionId,jdbcType=INTEGER},
+      </if>
+      <if test="sectionName != null" >
+        #{sectionName,jdbcType=VARCHAR},
+      </if>
+      <if test="chapterId != null" >
+        #{chapterId,jdbcType=INTEGER},
+      </if>
+      <if test="sectionEdittime != null" >
+        #{sectionEdittime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.couse.pojo.Section" >
+    update section
+    <set >
+      <if test="sectionName != null" >
+        section_name = #{sectionName,jdbcType=VARCHAR},
+      </if>
+      <if test="chapterId != null" >
+        chapter_id = #{chapterId,jdbcType=INTEGER},
+      </if>
+      <if test="sectionEdittime != null" >
+        section_editTime = #{sectionEdittime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where section_id = #{sectionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.couse.pojo.Section" >
+    update section
+    set section_name = #{sectionName,jdbcType=VARCHAR}
+    where section_id = #{sectionId,jdbcType=INTEGER} and section_editTime = #{sectionEdittime,jdbcType=TIMESTAMP}
+  </update>
+</mapper>

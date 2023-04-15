@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.couse.mapper.ChapterMapper" >
+  <resultMap id="BaseResultMap" type="com.ruoyi.couse.pojo.Chapter" >
+    <id column="chapter_id" property="chapterId" jdbcType="INTEGER" />
+    <result column="chapter_name" property="chapterName" jdbcType="VARCHAR" />
+    <result column="course_id" property="courseId" jdbcType="INTEGER" />
+    <result column="chapter_editTime" property="chapterEdittime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <!--   
+  <resultMap id="ChapterAndSection" type="com.tf.uplusstudy.course.pojo.Chapter" >
+    <id column="chapter_id" property="chapterId" jdbcType="INTEGER" />
+    <result column="chapter_name" property="chapterName" jdbcType="VARCHAR" />
+    <result column="course_id" property="courseId" jdbcType="INTEGER" />
+    <result column="chapter_editTime" property="chapterEdittime" jdbcType="TIMESTAMP" />
+    <collection property="sectionList" ofType="com.tf.uplusstudy.course.pojo.Section">
+     	<id column="section_id" property="sectionId" jdbcType="INTEGER" />
+    	<result column="section_name" property="sectionName" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap> 
+  -->
+  <resultMap id="ChapterAndSection" type="com.ruoyi.couse.pojo.Chapter" >
+    <id column="chapter_id" property="chapterId" jdbcType="INTEGER" />
+    <result column="chapter_name" property="chapterName" jdbcType="VARCHAR" />
+    <result column="course_id" property="courseId" jdbcType="INTEGER" />
+    <result column="chapter_editTime" property="chapterEdittime" jdbcType="TIMESTAMP" />
+    <collection property="sectionList" ofType="com.ruoyi.couse.pojo.Section"
+    	select="com.tf.uplusstudy.course.dao.SectionMapper.listSectionByChapter" column="chapter_id">
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    chapter_id, chapter_name, course_id, chapter_editTime
+  </sql>
+  <!--这里要查出章节及其关联对象，假如使用BaseResultMap，返回的章节对象中sectionList为null-->
+  <select id="selectByPrimaryKey" resultMap="ChapterAndSection" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from chapter
+    where chapter_id = #{chapterId,jdbcType=INTEGER}
+  </select>
+  <select id="listChapterByCourse" resultMap="ChapterAndSection" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from chapter
+	WHERE course_id=#{courseId,jdbcType=INTEGER}
+  </select> 
+  <!--   
+  <select id="listChapterByCourse" resultMap="ChapterAndSection" parameterType="java.lang.Integer" >
+    SELECT c.chapter_id,c.chapter_name,c.course_id,c.chapter_editTime,s.section_id,s.section_name 
+	FROM chapter c left join section s on c.chapter_id=s.chapter_id 
+	WHERE c.course_id=#{courseId,jdbcType=INTEGER}
+  </select> 
+  -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from chapter
+    where chapter_id = #{chapterId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertClone" parameterType="com.ruoyi.repository.pojo.RepChapter" useGeneratedKeys="true" keyProperty="chapterId">
+    insert into chapter (chapter_name, course_id,
+                         chapter_editTime)
+    values (#{chapterName,jdbcType=VARCHAR}, #{courseId,jdbcType=INTEGER},
+            #{chapterEdittime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insert" parameterType="com.ruoyi.couse.pojo.Chapter" >
+    insert into chapter (chapter_id, chapter_name, course_id, 
+      chapter_editTime)
+    values (#{chapterId,jdbcType=INTEGER}, #{chapterName,jdbcType=VARCHAR}, #{courseId,jdbcType=INTEGER}, 
+      #{chapterEdittime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ruoyi.couse.pojo.Chapter" useGeneratedKeys="true" keyProperty="chapterId">
+    insert into chapter
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="chapterId != null" >
+        chapter_id,
+      </if>
+      <if test="chapterName != null" >
+        chapter_name,
+      </if>
+      <if test="courseId != null" >
+        course_id,
+      </if>
+      <if test="chapterEdittime != null" >
+        chapter_editTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="chapterId != null" >
+        #{chapterId,jdbcType=INTEGER},
+      </if>
+      <if test="chapterName != null" >
+        #{chapterName,jdbcType=VARCHAR},
+      </if>
+      <if test="courseId != null" >
+        #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="chapterEdittime != null" >
+        #{chapterEdittime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.couse.pojo.Chapter" >
+    update chapter
+    <set >
+      <if test="chapterName != null" >
+        chapter_name = #{chapterName,jdbcType=VARCHAR},
+      </if>
+      <if test="courseId != null" >
+        course_id = #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="chapterEdittime != null" >
+        chapter_editTime = #{chapterEdittime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where chapter_id = #{chapterId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.couse.pojo.Chapter" >
+    update chapter
+    set chapter_name = #{chapterName,jdbcType=VARCHAR}
+    where chapter_id = #{chapterId,jdbcType=INTEGER} and chapter_editTime=#{chapterEdittime,jdbcType=TIMESTAMP}
+  </update>
+</mapper>
